@@ -2,7 +2,6 @@ package com.devsuperior.dsmovie.controllers;
 
 import com.devsuperior.dsmovie.tests.TokenUtil;
 import io.restassured.http.ContentType;
-import io.restassured.path.json.JsonPath;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
