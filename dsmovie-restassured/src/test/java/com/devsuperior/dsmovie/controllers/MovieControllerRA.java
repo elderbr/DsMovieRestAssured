@@ -53,6 +53,20 @@ public class MovieControllerRA {
 
     @Test
     public void findByIdShouldReturnMovieWhenIdExists() {
+        given()
+                .header("Content-Type", "application-json")
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/movies/{id}", exitingMovieId)
+                .then()
+                .statusCode(200)
+                .body("id", is(1))
+                .body("title", equalTo(exitingMovieTitle))
+                .body("score", is(4.5F))
+                .body("count", is(2))
+                .body("image", equalTo("https://www.themoviedb.org/t/p/w533_and_h300_bestv2/jBJWaqoSCiARWtfV0GlqHrcdidd.jpg"))
+        ;
     }
 
     @Test
