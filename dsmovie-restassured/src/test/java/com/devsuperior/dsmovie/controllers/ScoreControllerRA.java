@@ -75,6 +75,20 @@ public class ScoreControllerRA {
 	}
 	
 	@Test
-	public void saveScoreShouldReturnUnprocessableEntityWhenScoreIsLessThanZero() throws Exception {		
+	public void saveScoreShouldReturnUnprocessableEntityWhenScoreIsLessThanZero() throws Exception {
+		newScore.put("score", -5.0);
+		JSONObject jsonBody = new JSONObject(newScore);
+		given()
+				.header("Content-Type", "application-json")
+				.header("Authorization", "Bearer " + adminToken)
+				.accept(ContentType.JSON)
+				.contentType(ContentType.JSON)
+				.body(jsonBody)
+				.when()
+				.put("/scores")
+				.then()
+				.statusCode(422)
+				.body("error", equalTo("Dados inválidos"))
+		;
 	}
 }
