@@ -25,14 +25,21 @@ public class MovieControllerRA {
 
     private Map<String, Object> postMovie;
     private String adminToken, adminUserName, adminPassword;
+    private String clientToken, clientUserName, clientPassword;
 
     @BeforeEach
     void setUp() throws Exception {
         baseURI = "http://localhost:8080";
 
-        adminUserName = "alex@gmail.com";
+        // Admin
+        adminUserName = "maria@gmail.com";
         adminPassword = "123456";
         adminToken = TokenUtil.obtainAccessToken(adminUserName, adminPassword);
+
+        // Cliente
+        clientUserName = "alex@gmail.com";
+        clientPassword = "123456";
+        clientToken = TokenUtil.obtainAccessToken(clientUserName, clientPassword);
 
         exitingMovieId = 1;
         nonExistingMovieID = 200;
@@ -134,6 +141,19 @@ public class MovieControllerRA {
 
     @Test
     public void insertShouldReturnForbiddenWhenClientLogged() throws Exception {
+        JSONObject newMovie = new JSONObject(postMovie);
+
+        given()
+                .header("Content-Type", "application-json")
+                .header("Authorization", "Bearer " + clientToken)
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .body(newMovie)
+                .when()
+                .post("/movies")
+                .then()
+                .statusCode(403)
+        ;
     }
 
     @Test
