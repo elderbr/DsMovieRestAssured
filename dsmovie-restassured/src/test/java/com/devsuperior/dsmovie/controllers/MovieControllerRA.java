@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.is;
 
 public class MovieControllerRA {
 
-    private Integer exitingMovieId;
+    private Integer exitingMovieId, nonExistingMovieID;
     private String exitingMovieTitle;
 
     @BeforeEach
@@ -20,6 +20,7 @@ public class MovieControllerRA {
         baseURI = "http://localhost:8080";
 
         exitingMovieId = 1;
+        nonExistingMovieID = 200;
         exitingMovieTitle = "The Witcher";
     }
 
@@ -71,6 +72,17 @@ public class MovieControllerRA {
 
     @Test
     public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() {
+        given()
+                .header("Content-Type", "application-json")
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/movies/{id}", nonExistingMovieID)
+                .then()
+                .statusCode(404)
+                .body("error", equalTo("Recurso não encontrado"))
+        ;
+
     }
 
     @Test
