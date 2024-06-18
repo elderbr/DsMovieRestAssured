@@ -58,6 +58,20 @@ public class ScoreControllerRA {
 	
 	@Test
 	public void saveScoreShouldReturnUnprocessableEntityWhenMissingMovieId() throws Exception {
+		newScore.remove("movieId");
+		JSONObject jsonBody = new JSONObject(newScore);
+		given()
+				.header("Content-Type", "application-json")
+				.header("Authorization", "Bearer " + adminToken)
+				.accept(ContentType.JSON)
+				.contentType(ContentType.JSON)
+				.body(jsonBody)
+				.when()
+				.put("/scores")
+				.then()
+				.statusCode(422)
+				.body("error", equalTo("Dados inválidos"))
+		;
 	}
 	
 	@Test
