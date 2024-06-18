@@ -1,9 +1,15 @@
 package com.devsuperior.dsmovie.controllers;
 
+import com.devsuperior.dsmovie.tests.TokenUtil;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import org.json.JSONException;
+import org.json.simple.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
@@ -12,16 +18,37 @@ import static org.hamcrest.Matchers.is;
 
 public class MovieControllerRA {
 
-    private Integer exitingMovieId, nonExistingMovieID;
-    private String exitingMovieTitle;
+    private Long newMovieId;
+    private Integer exitingMovieId, nonExistingMovieID, countMovie;
+    private String exitingMovieTitle, newMovieTitle, newMovieImage;
+    private Double scoreMovie;
+
+    private Map<String, Object> postMovie;
+    private String adminToken, adminUserName, adminPassword;
 
     @BeforeEach
     void setUp() throws Exception {
         baseURI = "http://localhost:8080";
 
+        adminUserName = "alex@gmail.com";
+        adminPassword = "123456";
+        adminToken = TokenUtil.obtainAccessToken(adminUserName, adminPassword);
+
         exitingMovieId = 1;
         nonExistingMovieID = 200;
         exitingMovieTitle = "The Witcher";
+
+        // Novo Movie
+        newMovieTitle = "Home Aranha";
+        scoreMovie = 0.0;
+        countMovie = 0;
+        newMovieImage = "new_image.jpg";
+
+        postMovie = new HashMap<>();
+        postMovie.put("title", newMovieTitle);
+        postMovie.put("score", scoreMovie);
+        postMovie.put("count", countMovie);
+        postMovie.put("image", newMovieImage);
     }
 
     @Test
@@ -87,6 +114,22 @@ public class MovieControllerRA {
 
     @Test
     public void insertShouldReturnUnprocessableEntityWhenAdminLoggedAndBlankTitle() throws JSONException {
+
+        postMovie.put("title", " ");
+        JSONObject newMovie = new JSONObject(postMovie);
+
+        given()
+                .header("Content-Type", "application-json")
+                .header("Authorization", "Bearer " + adminToken)
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .body(newMovie)
+                .when()
+                .post("/movies")
+                .then()
+                .statusCode(422)
+                .body("error", equalTo("Dados inválidos"))
+        ;
     }
 
     @Test
