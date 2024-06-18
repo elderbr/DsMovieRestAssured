@@ -25,7 +25,7 @@ public class MovieControllerRA {
 
     private Map<String, Object> postMovie;
     private String adminToken, adminUserName, adminPassword;
-    private String clientToken, clientUserName, clientPassword;
+    private String clientToken, clientUserName, clientPassword, invalidToken;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -56,6 +56,8 @@ public class MovieControllerRA {
         postMovie.put("score", scoreMovie);
         postMovie.put("count", countMovie);
         postMovie.put("image", newMovieImage);
+
+        invalidToken = adminToken+"eld";
     }
 
     @Test
@@ -158,5 +160,18 @@ public class MovieControllerRA {
 
     @Test
     public void insertShouldReturnUnauthorizedWhenInvalidToken() throws Exception {
+        JSONObject newMovie = new JSONObject(postMovie);
+
+        given()
+                .header("Content-Type", "application-json")
+                .header("Authorization", "Bearer " + invalidToken)
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .body(newMovie)
+                .when()
+                .post("/movies")
+                .then()
+                .statusCode(401)
+        ;
     }
 }
