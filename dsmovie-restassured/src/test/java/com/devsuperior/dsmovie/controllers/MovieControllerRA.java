@@ -1,24 +1,38 @@
 package com.devsuperior.dsmovie.controllers;
 
 import org.json.JSONException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static io.restassured.RestAssured.baseURI;
+import static io.restassured.RestAssured.given;
+
 public class MovieControllerRA {
-	
-	@Test
-	public void findAllShouldReturnOkWhenMovieNoArgumentsGiven() {
+
+	@BeforeEach
+	void setUp() throws Exception {
+		baseURI = "http://localhost:8080";
 	}
 	
 	@Test
-	public void findAllShouldReturnPagedMoviesWhenMovieTitleParamIsNotEmpty() {		
+	public void findAllShouldReturnOkWhenMovieNoArgumentsGiven() throws Exception {
+		given()
+				.get("/movies")
+				.then()
+				.statusCode(200)
+		;
 	}
 	
 	@Test
-	public void findByIdShouldReturnMovieWhenIdExists() {		
+	public void findAllShouldReturnPagedMoviesWhenMovieTitleParamIsNotEmpty(){
 	}
 	
 	@Test
-	public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() {	
+	public void findByIdShouldReturnMovieWhenIdExists(){
+	}
+	
+	@Test
+	public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() {
 	}
 	
 	@Test
